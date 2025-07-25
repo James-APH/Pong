@@ -31,7 +31,27 @@ pub fn init_paddle(
     }
 }
 
-impl Paddle {}
+impl Paddle {
+    pub fn get_width(&self) -> f32 {
+        self.width
+    }
+
+    pub fn get_height(&self) -> f32 {
+        self.height
+    }
+
+    pub fn get_x(&self) -> f32 {
+        self.x
+    }
+
+    pub fn get_y(&self) -> f32 {
+        self.y
+    }
+
+    pub fn set_y(&mut self, y: f32) {
+        self.y = y
+    }
+}
 
 impl Update for Paddle {
     fn update(self: &mut Paddle, dt: f32) {
