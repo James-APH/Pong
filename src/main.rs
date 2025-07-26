@@ -5,15 +5,46 @@ mod pong_types;
 mod score;
 use macroquad::prelude::*;
 
-#[macroquad::main("MyGame")]
+use crate::{paddle::init_paddle, pong_types::Draw, pong_types::Update};
+
+#[macroquad::main("Pong")]
 async fn main() {
+    let player_width: f32 = 32.;
+    let player_height: f32 = 256.;
+    let player_dimensions: (f32, f32) = (player_width, player_height);
+    let player_speed: f32 = 250.;
+    let player_x_offset: f32 = 16.;
+    let player_y_coord: f32 = screen_height() / 2.0;
+    let play_game: bool = true;
+    // will be left player
+    let mut p1 = init_paddle(
+        player_dimensions,
+        (0., 0.),
+        player_speed,
+        (KeyCode::W, KeyCode::S),
+        BLUE,
+    );
+    // will be right player
+    let mut p2 = init_paddle(
+        player_dimensions,
+        (0., 0.),
+        player_speed,
+        (KeyCode::Up, KeyCode::Down),
+        BLUE,
+    );
+
+    // main game loop
     loop {
-        clear_background(RED);
+        let delta_time = get_frame_time();
 
-        draw_line(40.0, 40.0, 100.0, 200.0, 15.0, BLUE);
-        draw_rectangle(screen_width() / 2.0 - 60.0, 100.0, 120.0, 60.0, GREEN);
+        clear_background(GRAY);
+        if play_game {
+            p1.update(delta_time);
+            p2.update(delta_time);
+        }
 
-        draw_text("Hello, Macroquad!", 20.0, 20.0, 30.0, DARKGRAY);
+        p1.draw();
+        p2.draw();
 
         next_frame().await
     }
