@@ -62,6 +62,8 @@ impl Update for Paddle {
         if is_key_down(self.ctrl_down) {
             self.y -= distance
         }
+
+        self.y = clamp(self.y, 0.0, screen_height() - self.height);
     }
 }
 
