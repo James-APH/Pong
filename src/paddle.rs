@@ -1,30 +1,21 @@
 use crate::pong_types::*;
+use crate::settings::*;
 use macroquad::prelude::*;
 
 pub struct Paddle {
-    width: f32,
-    height: f32,
-    x: f32,
-    y: f32,
-    speed: f32,
+    dim: (f32, f32),
+    pos: Vec2,
+    vel: f32,
     ctrl_up: KeyCode,
     ctrl_down: KeyCode,
     color: Color,
 }
 
-pub fn init_paddle(
-    dimensions: (f32, f32),
-    coords: (f32, f32),
-    speed: f32,
-    controls: (KeyCode, KeyCode),
-    color: Color,
-) -> Paddle {
+pub fn init_paddle(pos: Vec2, vel: f32, controls: (KeyCode, KeyCode), color: Color) -> Paddle {
     Paddle {
-        width: dimensions.0,
-        height: dimensions.1,
-        x: coords.0,
-        y: coords.1,
-        speed,
+        dim: (PADDLE_WIDTH, PADDLE_HEIGHT),
+        pos,
+        vel,
         ctrl_up: controls.0,
         ctrl_down: controls.1,
         color,
@@ -32,43 +23,41 @@ pub fn init_paddle(
 }
 
 impl Paddle {
-    pub fn get_width(&self) -> f32 {
-        self.width
-    }
-
-    pub fn get_height(&self) -> f32 {
-        self.height
-    }
-
     pub fn get_x(&self) -> f32 {
-        self.x
+        self.pos.x
     }
 
     pub fn get_y(&self) -> f32 {
-        self.y
+        self.pos.y
     }
 
     pub fn set_y(&mut self, y: f32) {
-        self.y = y
+        self.pos.y = y
     }
 }
 
 impl Update for Paddle {
     fn update(self: &mut Paddle, dt: f32) {
-        let distance = self.speed * dt;
+        let distance = self.vel * dt;
         if is_key_down(self.ctrl_up) {
-            self.y += distance;
+            self.pos.y += distance;
         }
         if is_key_down(self.ctrl_down) {
-            self.y -= distance
+            self.pos.y -= distance
         }
 
-        self.y = clamp(self.y, 0.0, screen_height() - self.height);
+        self.pos.y = clamp(self.position.y, 0.0, screen_height() - PADDLE_HEIGHT);
     }
 }
 
 impl Draw for Paddle {
     fn draw(self: &Paddle) {
-        draw_rectangle(self.x, self.y, self.width, self.height, self.color);
+        draw_rectangle(
+            self.pos.x,
+            self.pos.y,
+            PADDLE_WIDTH,
+            PADDLE_HEIGHT,
+            self.color,
+        );
     }
 }
