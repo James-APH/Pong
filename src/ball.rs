@@ -2,18 +2,22 @@ use crate::pong_types::*;
 use macroquad::prelude::*;
 
 pub struct Ball {
+    pos: Vec2,
+    vel: Vec2,
+    dir: Vec2,
     radius: f32,
-    coords: (f32, f32),
-    speed: (f32, f32),
+    max_vel: f32,
     color: Color,
 }
 
-pub fn init_ball(radius: f32, coords: (f32, f32), speed: (f32, f32), color: Color) -> Ball {
+pub fn init_ball(pos: Vec2, vel: Vec2, dir: Vec2) -> Ball {
     Ball {
-        radius,
-        coords,
-        speed,
-        color,
+        pos,
+        vel,
+        dir,
+        radius: BALL_RADIUS,
+        max_vel: MAX_BALL_VEL,
+        color: BALL_COLOR,
     }
 }
 
@@ -23,22 +27,26 @@ impl Ball {
     }
 
     pub fn get_y(&self) -> f32 {
-        self.coords.0
+        self.pos.y
     }
 
     pub fn get_x(&self) -> f32 {
-        self.coords.1
+        self.pos.x
     }
 
     pub fn set_y(&mut self, y: f32) {
-        self.coords.1 = y
+        self.pos.y = y;
+    }
+
+    pub fn set_x(&mut self, x: f32) {
+        self.pos.x = x;
     }
 }
 
 impl Update for Ball {
     fn update(self: &mut Ball, dt: f32) {
-        let distance_x = self.speed.0 * dt;
-        let distance_y = self.speed.1 * dt;
+        let distance_x = self.vel.x * self.dir.x * dt;
+        let distance_y = self.vel.y * self.dir.y * dt;
 
         // Will need to think about this one
         // perhaps start the ballout in a random
@@ -50,6 +58,6 @@ impl Update for Ball {
 
 impl Draw for Ball {
     fn draw(self: &Ball) {
-        draw_circle(self.coords.0, self.coords.1, self.radius, self.color);
+        draw_circle(self.pos.x, self.pos.y, self.radius, self.color);
     }
 }
