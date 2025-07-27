@@ -1,5 +1,4 @@
 use crate::pong_types::*;
-use crate::settings::*;
 use macroquad::prelude::*;
 
 pub struct Paddle {
@@ -11,14 +10,14 @@ pub struct Paddle {
     color: Color,
 }
 
-pub fn init_paddle(pos: Vec2, vel: f32, controls: (KeyCode, KeyCode), color: Color) -> Paddle {
+pub fn init_paddle(pos: Vec2, vel: f32, controls: (KeyCode, KeyCode)) -> Paddle {
     Paddle {
         dim: (PADDLE_WIDTH, PADDLE_HEIGHT),
         pos,
         vel,
         ctrl_up: controls.0,
         ctrl_down: controls.1,
-        color,
+        color: PADDLE_COLOR,
     }
 }
 
@@ -46,7 +45,7 @@ impl Update for Paddle {
             self.pos.y -= distance
         }
 
-        self.pos.y = clamp(self.position.y, 0.0, screen_height() - PADDLE_HEIGHT);
+        self.pos.y = clamp(self.pos.y, 0.0, screen_height() - PADDLE_HEIGHT);
     }
 }
 
