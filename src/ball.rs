@@ -41,13 +41,22 @@ impl Ball {
     pub fn set_x(&mut self, x: f32) {
         self.pos.x = x;
     }
+
+    pub fn reverse_dir_y(&mut self) {
+        self.dir.y *= -1.
+    }
+
+    pub fn reverse_dir_x(&mut self) {
+        self.dir.x *= -1.
+    }
 }
 
 impl Update for Ball {
     fn update(self: &mut Ball, dt: f32) {
         let distance_x = self.vel.x * self.dir.x * dt;
         let distance_y = self.vel.y * self.dir.y * dt;
-
+        self.pos.x += distance_x;
+        self.pos.y += distance_y;
         // Will need to think about this one
         // perhaps start the ballout in a random
         // direction.
