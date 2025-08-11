@@ -1,4 +1,5 @@
 mod ball;
+mod collisions;
 mod gamestate;
 mod paddle;
 mod pong_types;
@@ -6,8 +7,10 @@ mod score;
 mod settings;
 
 use crate::ball::init_ball;
+use crate::collisions::*;
 use crate::paddle::*;
 use crate::pong_types::*;
+
 use macroquad::prelude::*;
 
 #[macroquad::main("Pong")]
@@ -41,8 +44,8 @@ async fn main() {
             x: mid_screen_x,
             y: mid_screen_y,
         },
-        Vec2 { x: 0.0, y: 0.0 },
-        Vec2 { x: 0.0, y: 0.0 },
+        Vec2 { x: 20.0, y: 20.0 },
+        Vec2 { x: 1.0, y: -1.0 },
     );
 
     // main game loop
@@ -54,6 +57,12 @@ async fn main() {
             ball.update(delta_time);
             p1.update(delta_time);
             p2.update(delta_time);
+
+            bounce_ball_at_wall(&mut ball, screen_height());
+            is_ball_at_paddle(&ball, &p1);
+            bounce_ball(&mut ball, &p1);
+            is_ball_at_paddle(&ball, &p2);
+            bounce_ball(&mut ball, &p2);
         }
 
         p1.draw();

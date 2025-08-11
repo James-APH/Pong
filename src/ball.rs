@@ -22,6 +22,14 @@ pub fn init_ball(pos: Vec2, vel: Vec2, dir: Vec2) -> Ball {
 }
 
 impl Ball {
+    pub fn get_circle(&self) -> Circle {
+        Circle {
+            x: self.pos.x,
+            y: self.pos.y,
+            r: self.radius,
+        }
+    }
+
     pub fn get_radius(&self) -> f32 {
         self.radius
     }

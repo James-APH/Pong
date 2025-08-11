@@ -22,6 +22,15 @@ pub fn init_paddle(pos: Vec2, vel: f32, controls: (KeyCode, KeyCode)) -> Paddle 
 }
 
 impl Paddle {
+    pub fn get_rect(&self) -> Rect {
+        Rect {
+            x: self.pos.x,
+            y: self.pos.y,
+            w: self.dim.0,
+            h: self.dim.1,
+        }
+    }
+
     pub fn get_x(&self) -> f32 {
         self.pos.x
     }
