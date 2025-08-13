@@ -57,6 +57,22 @@ impl Ball {
     pub fn reverse_dir_x(&mut self) {
         self.dir.x *= -1.
     }
+
+    pub fn set_x_vel(&mut self, vel: f32) {
+        self.vel.x = vel;
+    }
+
+    pub fn set_y_vel(&mut self, vel: f32) {
+        self.vel.y = vel;
+    }
+
+    pub fn get_x_vel(&self) -> f32 {
+        self.vel.x
+    }
+
+    pub fn get_y_vel(&self) -> f32 {
+        self.vel.y
+    }
 }
 
 impl Update for Ball {
