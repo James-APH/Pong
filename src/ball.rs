@@ -6,7 +6,6 @@ pub struct Ball {
     vel: Vec2,
     dir: Vec2,
     radius: f32,
-    max_vel: f32,
     color: Color,
 }
 
@@ -16,7 +15,6 @@ pub fn init_ball(pos: Vec2, vel: Vec2, dir: Vec2) -> Ball {
         vel,
         dir,
         radius: BALL_RADIUS,
-        max_vel: MAX_BALL_VEL,
         color: BALL_COLOR,
     }
 }
@@ -81,11 +79,6 @@ impl Update for Ball {
         let distance_y = self.vel.y * self.dir.y * dt;
         self.pos.x += distance_x;
         self.pos.y += distance_y;
-        // Will need to think about this one
-        // perhaps start the ballout in a random
-        // direction.
-        //
-        // Will mean I need to have 2 different speeds, one for x and one for y
     }
 }
 
