@@ -19,44 +19,45 @@ const SPEED_INCREASE_LEVEL_FOUR: f32 = 20.;
 
 // func to check if ball is at the wall
 pub fn bounce_ball_at_wall(ball: &mut Ball, height: f32) {
-    if ball.get_y() - ball.get_radius() <= 0. || ball.get_y() + ball.get_radius() >= height {
+    if ball.get_y() - ball.get_radius() <= 0. {
+        ball.set_y(ball.get_y() + ball.get_radius() / 2.);
+        ball.reverse_dir_y();
+    } else if ball.get_y() + ball.get_radius() >= height {
+        ball.set_y(ball.get_y() - ball.get_radius() / 2.);
         ball.reverse_dir_y();
     }
 }
-// may need to add two special cases for the players (either side in range)
-pub fn is_ball_at_paddle(ball: &Ball, paddle: &Paddle) -> bool {
-    ball.get_circle().overlaps_rect(&paddle.get_rect())
-}
 
 // func to bounce ball off of paddles
-pub fn bounce_ball(ball: &mut Ball, paddle: &Paddle) {
-    if is_ball_at_paddle(ball, paddle) {
+pub fn bounce_ball_on_paddle(ball: &mut Ball, paddle: &Paddle) {
+    if ball.get_circle().overlaps_rect(&paddle.get_rect()) {
         if ball.get_y() == paddle.get_y() {
-            ball.reverse_dir_x();
+            ball.set_x_vel(ball.get_x_vel() + SPEED_INCREASE_LEVEL_ONE);
+            ball.set_y_vel(ball.get_y_vel() + SPEED_INCREASE_LEVEL_ONE);
         } else if ball.get_y() > paddle.get_center_y() - PADDLE_RANGE_NARROW
             && ball.get_y() < paddle.get_center_y() + PADDLE_RANGE_NARROW
         {
-            ball.set_x_vel(ball.get_x_vel() + SPEED_INCREASE_LEVEL_ONE);
-            ball.set_y_vel(ball.get_y_vel() + SPEED_INCREASE_LEVEL_ONE);
-            ball.reverse_dir_x();
+            ball.set_x_vel(ball.get_x_vel() + SPEED_INCREASE_LEVEL_TWO);
+            ball.set_y_vel(ball.get_y_vel() + SPEED_INCREASE_LEVEL_TWO);
         } else if ball.get_y() > paddle.get_center_y() - PADDLE_RANGE_SLIM
             && ball.get_y() < paddle.get_center_y() + PADDLE_RANGE_SLIM
         {
             ball.set_x_vel(ball.get_x_vel() + SPEED_INCREASE_LEVEL_THREE);
             ball.set_y_vel(ball.get_y_vel() + SPEED_INCREASE_LEVEL_ONE);
-            ball.reverse_dir_x();
         } else if ball.get_y() > paddle.get_center_y() - PADDLE_RANGE_BROAD
             && ball.get_y() < paddle.get_center_y() + PADDLE_RANGE_BROAD
         {
             ball.set_x_vel(ball.get_x_vel() + SPEED_INCREASE_LEVEL_TWO);
             ball.set_y_vel(ball.get_y_vel() + SPEED_INCREASE_LEVEL_THREE);
-            ball.reverse_dir_x();
         } else if ball.get_y() > paddle.get_center_y() - PADDLE_RANGE_WIDE
             && ball.get_y() < paddle.get_center_y() + PADDLE_RANGE_WIDE
         {
             ball.set_x_vel(ball.get_x_vel() + SPEED_INCREASE_LEVEL_TWO);
             ball.set_y_vel(ball.get_y_vel() + SPEED_INCREASE_LEVEL_FOUR);
-            ball.reverse_dir_x();
         }
+        // in all cases x dir will be reversed
+        ball.reverse_dir_x();
+        // must force ball to be outside of the paddle
+        //ball.set_x(ball.get_x() + ball.get_radius() * ball.get_dir_x());
     }
 }
