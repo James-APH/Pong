@@ -40,6 +40,10 @@ impl Ball {
         self.pos.x
     }
 
+    pub fn get_dir_x(&self) -> f32 {
+        self.dir.x
+    }
+
     pub fn set_y(&mut self, y: f32) {
         self.pos.y = y;
     }

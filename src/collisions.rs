@@ -2,6 +2,7 @@
 use crate::ball::*;
 use crate::paddle::*;
 use crate::pong_types::PADDLE_HEIGHT;
+use crate::pong_types::PADDLE_WIDTH;
 
 const PADDLE_RANGE_NARROW: f32 = 0.1 * PADDLE_HEIGHT; /* *****|***** */
 const PADDLE_RANGE_SLIM: f32 = 0.3 * PADDLE_HEIGHT; /* ****|**|**** */
@@ -32,19 +33,33 @@ macro_rules! update_ball_vel {
 
 // func to check if ball is at the wall
 pub fn bounce_ball_at_wall(ball: &mut Ball, height: f32) {
-    if ball.get_y() - ball.get_radius() <= 0. {
-        ball.set_y(ball.get_y() + ball.get_radius() / 2.);
+    if ball.get_y() - ball.get_radius() < 0. {
+        ball.set_y(ball.get_radius());
         ball.reverse_dir_y();
-    } else if ball.get_y() + ball.get_radius() >= height {
-        ball.set_y(ball.get_y() - ball.get_radius() / 2.);
+    } else if ball.get_y() + ball.get_radius() > height {
+        ball.set_y(height - ball.get_radius());
         ball.reverse_dir_y();
     }
 }
 
 // func to bounce ball off of paddles
 pub fn bounce_ball_on_paddle(ball: &mut Ball, paddle: &Paddle) {
-    if ball.get_circle().overlaps_rect(&paddle.get_rect()) {
-        if ball.get_y() == paddle.get_y() {
+    // check if ball is bouncing on top / bottom of paddle 1st:
+    if ball.get_y() + ball.get_radius() > paddle.get_y()
+        && ball.get_y() + ball.get_radius() <= paddle.get_y() + ball.get_radius()
+        && ball.get_x() > paddle.get_x() + ball.get_radius()
+        && ball.get_x() < PADDLE_WIDTH - ball.get_radius()
+    {
+        ball.reverse_dir_y();
+        ball.set_y(paddle.get_y() + ball.get_radius());
+    } else if ball.get_y() - ball.get_radius() <= PADDLE_HEIGHT
+        && ball.get_x() > paddle.get_x() - ball.get_radius()
+        && ball.get_x() < PADDLE_WIDTH - ball.get_radius()
+    {
+        ball.reverse_dir_y();
+        ball.set_y(PADDLE_HEIGHT + ball.get_radius());
+    } else if ball.get_circle().overlaps_rect(&paddle.get_rect()) {
+        if ball.get_y() + ball.get_radius() == paddle.get_y() {
             update_ball_vel!(ball, VEL_INCR_LVL_ONE, VEL_INCR_LVL_ONE);
         } else if ball_in_range!(ball, paddle, PADDLE_RANGE_NARROW) {
             update_ball_vel!(ball, VEL_INCR_LVL_TWO, VEL_INCR_LVL_TWO);
@@ -58,6 +73,5 @@ pub fn bounce_ball_on_paddle(ball: &mut Ball, paddle: &Paddle) {
 
         ball.reverse_dir_x();
         // must force ball to be outside of the paddle
-        // ball.set_x(paddle.get_x() + ball.get_radius() * ball.get_dir_x());
     }
 }

@@ -64,10 +64,8 @@ async fn main() {
             right_player.update(delta_time);
 
             bounce_ball_at_wall(&mut ball, screen_height());
-            is_ball_at_paddle(&ball, &left_player);
-            bounce_ball(&mut ball, &left_player);
-            is_ball_at_paddle(&ball, &right_player);
-            bounce_ball(&mut ball, &right_player);
+            bounce_ball_on_paddle(&mut ball, &left_player);
+            bounce_ball_on_paddle(&mut ball, &right_player);
         }
 
         left_player.draw();

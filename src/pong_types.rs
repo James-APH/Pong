@@ -7,7 +7,6 @@ pub const PADDLE_COLOR: Color = RED;
 
 // BALL RELATED CONSTANTS
 pub const BALL_COLOR: Color = ORANGE;
-pub const MAX_BALL_VEL: f32 = 600.;
 pub const BALL_RADIUS: f32 = 16.;
 
 pub trait Update {

@@ -39,6 +39,10 @@ impl Paddle {
         self.pos.y
     }
 
+    pub fn get_center_y(&self) -> f32 {
+        self.pos.y + PADDLE_HEIGHT / 2.
+    }
+
     pub fn set_y(&mut self, y: f32) {
         self.pos.y = y
     }
