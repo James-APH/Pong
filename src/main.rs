@@ -1,10 +1,8 @@
 mod ball;
 mod collisions;
-mod gamestate;
 mod paddle;
 mod pong_types;
 mod score;
-mod settings;
 
 use crate::ball::*;
 use crate::collisions::*;
@@ -15,9 +13,9 @@ use macroquad::prelude::*;
 
 #[macroquad::main("Pong")]
 async fn main() {
-    let player_vel: f32 = 250.;
-    let initial_ball_vel: f32 = 75.;
-    let player_x_offset: f32 = 16.;
+    const PLAYER_VEL: f32 = 250.;
+    const INITIAL_BALL_VEL: f32 = 75.;
+    const PLAYER_X_OFFSET: f32 = 16.;
     let mid_screen_y: f32 = screen_height() / 2.0;
     let mid_screen_x: f32 = screen_width() / 2.0;
     let game_start_player_y_coord = mid_screen_y - (PADDLE_HEIGHT / 2.0);
@@ -25,19 +23,19 @@ async fn main() {
 
     let mut left_player = init_paddle(
         Vec2 {
-            x: player_x_offset,
+            x: PLAYER_X_OFFSET,
             y: game_start_player_y_coord,
         },
-        player_vel,
+        PLAYER_VEL,
         (KeyCode::S, KeyCode::W),
     );
 
     let mut right_player = init_paddle(
         Vec2 {
-            x: screen_width() - PADDLE_WIDTH - player_x_offset,
+            x: screen_width() - PADDLE_WIDTH - PLAYER_X_OFFSET,
             y: game_start_player_y_coord,
         },
-        player_vel,
+        PLAYER_VEL,
         (KeyCode::Down, KeyCode::Up),
     );
 
@@ -47,8 +45,8 @@ async fn main() {
             y: mid_screen_y,
         },
         Vec2 {
-            x: initial_ball_vel,
-            y: initial_ball_vel,
+            x: INITIAL_BALL_VEL,
+            y: INITIAL_BALL_VEL,
         },
         Vec2 { x: 1.0, y: 1.0 },
     );

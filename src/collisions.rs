@@ -14,6 +14,20 @@ const VEL_INCR_LVL_TWO: f32 = 10.;
 const VEL_INCR_LVL_THREE: f32 = 15.;
 const VEL_INCR_LVL_FOUR: f32 = 20.;
 
+/* PADDLE COLLISION PLAN
+ * Must rewrite this file quite a bit:
+ *
+ * 1. must check if ball entered / collided on either paddle when p.x == 0 && [p.y, p.y + p.height]
+ *                                                           or   p.y == 0 && [p.x, p.x + p.width]
+ *
+ * 2. will check by checking the FIRST intersection of the ball on the paddle (if its in the paddle
+ *    check for the edge that it (the ball) first hit)
+ *
+ * 3. Must reposition the ball outside of the paddle as smooth as possible else we get weird
+ *    bounces / physics in the game.
+ *
+ */
+
 /// Checks if ball is in range of area of paddle
 /// adds variability to ball direction
 macro_rules! ball_in_range {
