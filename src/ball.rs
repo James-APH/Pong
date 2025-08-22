@@ -36,10 +36,6 @@ impl Ball {
         self.pos.y
     }
 
-    pub fn get_x(&self) -> f32 {
-        self.pos.x
-    }
-
     pub fn get_dir_x(&self) -> f32 {
         self.dir.x
     }
@@ -74,20 +70,6 @@ impl Ball {
 
     pub fn get_y_vel(&self) -> f32 {
         self.vel.y
-    }
-
-    pub fn get_slope(&self) -> f32 {
-        let y_0 = self.pos.y;
-        let x_0 = self.pos.x;
-        let y_1 = self.pos.y + (self.vel.y * self.dir.y);
-        let x_1 = self.pos.x + (self.vel.x * self.dir.x);
-        (y_1 - y_0) / (x_1 - x_0)
-    }
-
-    pub fn get_y_intersect(&self) -> f32 {
-        let y_0 = self.pos.y;
-        let x_0 = self.pos.x;
-        y_0 - (self.get_slope() * x_0)
     }
 }
 

@@ -28,6 +28,7 @@ async fn main() {
         },
         PLAYER_VEL,
         (KeyCode::S, KeyCode::W),
+        PLAYER_X_OFFSET + PADDLE_WIDTH,
     );
 
     let mut right_player = init_paddle(
@@ -37,6 +38,7 @@ async fn main() {
         },
         PLAYER_VEL,
         (KeyCode::Down, KeyCode::Up),
+        screen_width() - PADDLE_WIDTH - PLAYER_X_OFFSET,
     );
 
     let mut ball = init_ball(

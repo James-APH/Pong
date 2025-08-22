@@ -8,9 +8,10 @@ pub struct Paddle {
     ctrl_up: KeyCode,
     ctrl_down: KeyCode,
     color: Color,
+    front_x: f32,
 }
 
-pub fn init_paddle(pos: Vec2, vel: f32, controls: (KeyCode, KeyCode)) -> Paddle {
+pub fn init_paddle(pos: Vec2, vel: f32, controls: (KeyCode, KeyCode), front_x: f32) -> Paddle {
     Paddle {
         dim: (PADDLE_WIDTH, PADDLE_HEIGHT),
         pos,
@@ -18,6 +19,7 @@ pub fn init_paddle(pos: Vec2, vel: f32, controls: (KeyCode, KeyCode)) -> Paddle 
         ctrl_up: controls.0,
         ctrl_down: controls.1,
         color: PADDLE_COLOR,
+        front_x,
     }
 }
 
@@ -31,10 +33,6 @@ impl Paddle {
         }
     }
 
-    pub fn get_x(&self) -> f32 {
-        self.pos.x
-    }
-
     pub fn get_y(&self) -> f32 {
         self.pos.y
     }
@@ -45,6 +43,10 @@ impl Paddle {
 
     pub fn set_y(&mut self, y: f32) {
         self.pos.y = y
+    }
+
+    pub fn get_front_x(&self) -> f32 {
+        self.front_x
     }
 }
 
