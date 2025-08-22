@@ -11,7 +11,16 @@ use crate::pong_types::*;
 
 use macroquad::prelude::*;
 
-#[macroquad::main("Pong")]
+fn set_conf() -> Conf {
+    Conf {
+        window_title: String::from("PONG ULTIMATE BALL OUT"),
+        window_width: 1000,
+        window_height: 500,
+        ..Default::default()
+    }
+}
+
+#[macroquad::main(set_conf)]
 async fn main() {
     const PLAYER_VEL: f32 = 250.;
     const INITIAL_BALL_VEL: f32 = 75.;
