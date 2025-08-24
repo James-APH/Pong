@@ -1,4 +1,5 @@
-use crate::pong_types::*;
+use crate::game_traits::*;
+use crate::settings::*;
 use macroquad::prelude::*;
 
 pub struct Paddle {

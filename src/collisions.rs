@@ -1,7 +1,6 @@
 use crate::ball::*;
 use crate::paddle::*;
-use crate::pong_types::PADDLE_HEIGHT;
-
+use crate::settings::*;
 const PADDLE_HIT_RANGE_NARROW: f32 = 0.1 * PADDLE_HEIGHT;
 const PADDLE_HIT_RANGE_SLIM: f32 = 0.3 * PADDLE_HEIGHT;
 const PADDLE_HIT_RANGE_BROAD: f32 = 0.6 * PADDLE_HEIGHT;

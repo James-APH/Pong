@@ -1,30 +1,20 @@
 mod ball;
 mod collisions;
+mod game_traits;
 mod paddle;
-mod pong_types;
 mod score;
+mod settings;
 
 use crate::ball::*;
 use crate::collisions::*;
+use crate::game_traits::*;
 use crate::paddle::*;
-use crate::pong_types::*;
+use crate::settings::*;
 
 use macroquad::prelude::*;
 
-fn set_conf() -> Conf {
-    Conf {
-        window_title: String::from("PONG ULTIMATE BALL OUT"),
-        window_width: 1000,
-        window_height: 500,
-        ..Default::default()
-    }
-}
-
 #[macroquad::main(set_conf)]
 async fn main() {
-    const PLAYER_VEL: f32 = 250.;
-    const INITIAL_BALL_VEL: f32 = 75.;
-    const PLAYER_X_OFFSET: f32 = 16.;
     let mid_screen_y: f32 = screen_height() / 2.0;
     let mid_screen_x: f32 = screen_width() / 2.0;
     let game_start_player_y_coord = mid_screen_y - (PADDLE_HEIGHT / 2.0);
@@ -32,22 +22,22 @@ async fn main() {
 
     let mut left_player = init_paddle(
         Vec2 {
-            x: PLAYER_X_OFFSET,
+            x: PADDLE_X_OFFSET,
             y: game_start_player_y_coord,
         },
-        PLAYER_VEL,
+        PADDLE_VELOCITY,
         (KeyCode::S, KeyCode::W),
-        PLAYER_X_OFFSET + PADDLE_WIDTH,
+        PADDLE_X_OFFSET + PADDLE_WIDTH,
     );
 
     let mut right_player = init_paddle(
         Vec2 {
-            x: screen_width() - PADDLE_WIDTH - PLAYER_X_OFFSET,
+            x: screen_width() - PADDLE_WIDTH - PADDLE_X_OFFSET,
             y: game_start_player_y_coord,
         },
-        PLAYER_VEL,
+        PADDLE_VELOCITY,
         (KeyCode::Down, KeyCode::Up),
-        screen_width() - PADDLE_WIDTH - PLAYER_X_OFFSET,
+        screen_width() - PADDLE_WIDTH - PADDLE_X_OFFSET,
     );
 
     let mut ball = init_ball(
@@ -56,8 +46,8 @@ async fn main() {
             y: mid_screen_y,
         },
         Vec2 {
-            x: INITIAL_BALL_VEL,
-            y: INITIAL_BALL_VEL,
+            x: MINIMUM_BALL_VELOCITY,
+            y: MINIMUM_BALL_VELOCITY,
         },
         Vec2 { x: 1.0, y: 1.0 },
     );
