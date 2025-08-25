@@ -1,10 +1,10 @@
 use crate::ball::*;
 use crate::paddle::*;
 use crate::settings::*;
-const PADDLE_HIT_RANGE_NARROW: f32 = 0.1 * PADDLE_HEIGHT;
-const PADDLE_HIT_RANGE_SLIM: f32 = 0.3 * PADDLE_HEIGHT;
-const PADDLE_HIT_RANGE_BROAD: f32 = 0.6 * PADDLE_HEIGHT;
-const PADDLE_HIT_RANGE_WIDE: f32 = 1.0 * PADDLE_HEIGHT;
+const PADDLE_HIT_RANGE_NARROW: f32 = 0.1 * PADDLE_H;
+const PADDLE_HIT_RANGE_SLIM: f32 = 0.3 * PADDLE_H;
+const PADDLE_HIT_RANGE_BROAD: f32 = 0.6 * PADDLE_H;
+const PADDLE_HIT_RANGE_WIDE: f32 = 1.0 * PADDLE_H;
 
 const VEL_INCR_SNAIL: f32 = 5.;
 const VEL_INCR_SLOW: f32 = 10.;

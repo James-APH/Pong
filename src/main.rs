@@ -16,40 +16,36 @@ use macroquad::prelude::*;
 
 #[macroquad::main(set_conf)]
 async fn main() {
-    let center_y = screen_height() / 2.0;
-    let center_x = screen_width() / 2.0;
-    let paddle_dim = Vec2::new(PADDLE_WIDTH, PADDLE_HEIGHT);
-    let paddle_pos_l = Vec2::new(PADDLE_X_OFFSET, center_y - (PADDLE_HEIGHT / 2.0));
-    let paddle_pos_r = Vec2::new(
-        screen_width() - PADDLE_WIDTH - PADDLE_X_OFFSET,
-        center_y - (PADDLE_HEIGHT / 2.0),
-    );
+    let screen_h = SCREEN_H as f32;
+    let screen_w = SCREEN_W as f32;
+    let center_y = screen_h / 2.0;
+    let center_x = screen_w / 2.0;
+    let paddle_center = center_y - PADDLE_H / 2.0;
+    let paddle_dim = Vec2::new(PADDLE_W, PADDLE_H);
+    let paddle_pos_l = Vec2::new(PADDLE_X_OFFSET, paddle_center);
+    let paddle_pos_r = Vec2::new(screen_w - PADDLE_W - PADDLE_X_OFFSET, paddle_center);
+    let ball_pos = Vec2::new(center_x, center_y);
+    let ball_dir = Vec2::new(1.0, 1.0);
 
     let l_paddle = Paddle::new(
         paddle_dim,
         paddle_pos_l,
-        PADDLE_VELOCITY,
-        paddle_pos_l.x + PADDLE_WIDTH,
+        PADDLE_VEL,
+        paddle_pos_l.x + PADDLE_W,
+        PADDLE_COLOR,
     );
     let r_paddle = Paddle::new(
         paddle_dim,
         paddle_pos_r,
-        PADDLE_VELOCITY,
-        paddle_pos_r.x - PADDLE_WIDTH,
+        PADDLE_VEL,
+        paddle_pos_r.x,
+        PADDLE_COLOR,
     );
+
+    let mut ball = Ball::new(ball_pos, MIN_BALL_VEL, ball_dir, BALL_RADIUS, BALL_COLOR);
 
     let mut l_player = Player::new("LEFT", l_paddle, (KeyCode::W, KeyCode::S));
     let mut r_player = Player::new("RIGHT", r_paddle, (KeyCode::Up, KeyCode::Down));
-
-    let ball_pos = Vec2::new(center_x, center_y);
-    let ball_dir = Vec2::new(1.0, 1.0);
-    let mut ball = Ball::new(
-        ball_pos,
-        MINIMUM_BALL_VELOCITY,
-        ball_dir,
-        BALL_RADIUS,
-        BALL_COLOR,
-    );
 
     // main game loop
     let play_game: bool = true;

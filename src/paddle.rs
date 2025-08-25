@@ -1,5 +1,4 @@
 use crate::game_traits::*;
-use crate::settings::*;
 use macroquad::prelude::*;
 
 pub struct Paddle {
@@ -11,13 +10,13 @@ pub struct Paddle {
 }
 
 impl Paddle {
-    pub fn new(dim: Vec2, pos: Vec2, vel: f32, front_x: f32) -> Self {
+    pub fn new(dim: Vec2, pos: Vec2, vel: f32, front_x: f32, color: Color) -> Self {
         Self {
             dim,
             pos,
             vel,
             front_x,
-            color: PADDLE_COLOR,
+            color,
         }
     }
 
@@ -35,11 +34,7 @@ impl Paddle {
     }
 
     pub fn get_center_y(&self) -> f32 {
-        self.pos.y + PADDLE_HEIGHT / 2.
-    }
-
-    pub fn set_y(&mut self, y: f32) {
-        self.pos.y = y
+        self.pos.y + self.dim.y / 2.
     }
 
     pub fn get_front_x(&self) -> f32 {
@@ -55,18 +50,12 @@ impl Paddle {
             self.pos.y -= distance
         }
 
-        self.pos.y = clamp(self.pos.y, 0.0, screen_height() - PADDLE_HEIGHT);
+        self.pos.y = clamp(self.pos.y, 0.0, screen_height() - self.dim.y);
     }
 }
 
 impl Draw for Paddle {
     fn draw(self: &Paddle) {
-        draw_rectangle(
-            self.pos.x,
-            self.pos.y,
-            PADDLE_WIDTH,
-            PADDLE_HEIGHT,
-            self.color,
-        );
+        draw_rectangle(self.pos.x, self.pos.y, self.dim.x, self.dim.y, self.color);
     }
 }

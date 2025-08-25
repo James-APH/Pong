@@ -1,8 +1,8 @@
 use crate::game_traits::*;
 use crate::paddle::*;
 use crate::settings::*;
+use macroquad::input::KeyCode;
 use macroquad::prelude::*;
-use macroquad::{input::KeyCode, window::screen_height};
 
 pub struct Player {
     name: String,
