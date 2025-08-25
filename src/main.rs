@@ -43,7 +43,13 @@ async fn main() {
 
     let ball_pos = Vec2::new(center_x, center_y);
     let ball_dir = Vec2::new(1.0, 1.0);
-    let mut ball = Ball::new(ball_pos, MINIMUM_BALL_VELOCITY, ball_dir);
+    let mut ball = Ball::new(
+        ball_pos,
+        MINIMUM_BALL_VELOCITY,
+        ball_dir,
+        BALL_RADIUS,
+        BALL_COLOR,
+    );
 
     // main game loop
     let play_game: bool = true;

@@ -11,13 +11,13 @@ pub struct Ball {
 }
 
 impl Ball {
-    pub fn new(pos: Vec2, vel: f32, dir: Vec2) -> Self {
+    pub fn new(pos: Vec2, vel: f32, dir: Vec2, radius: f32, color: Color) -> Self {
         Self {
             pos,
             vel: Vec2::new(vel, vel),
             dir,
-            radius: BALL_RADIUS,
-            color: PADDLE_COLOR,
+            radius,
+            color,
         }
     }
 

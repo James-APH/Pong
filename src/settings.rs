@@ -3,7 +3,7 @@ use macroquad::prelude::*;
 // PADDLE RELATED CONSTANTS
 pub const PADDLE_HEIGHT: f32 = 128.;
 pub const PADDLE_WIDTH: f32 = 32.;
-pub const PADDLE_COLOR: Color = RED;
+pub const PADDLE_COLOR: Color = WHITE;
 pub const PADDLE_VELOCITY: f32 = 250.;
 pub const PADDLE_X_OFFSET: f32 = 16.;
 
