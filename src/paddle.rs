@@ -3,34 +3,30 @@ use crate::settings::*;
 use macroquad::prelude::*;
 
 pub struct Paddle {
-    dim: (f32, f32),
+    dim: Vec2,
     pos: Vec2,
     vel: f32,
-    ctrl_up: KeyCode,
-    ctrl_down: KeyCode,
-    color: Color,
     front_x: f32,
-}
-
-pub fn init_paddle(pos: Vec2, vel: f32, controls: (KeyCode, KeyCode), front_x: f32) -> Paddle {
-    Paddle {
-        dim: (PADDLE_WIDTH, PADDLE_HEIGHT),
-        pos,
-        vel,
-        ctrl_up: controls.0,
-        ctrl_down: controls.1,
-        color: PADDLE_COLOR,
-        front_x,
-    }
+    color: Color,
 }
 
 impl Paddle {
+    pub fn new(dim: Vec2, pos: Vec2, vel: f32, front_x: f32) -> Self {
+        Self {
+            dim,
+            pos,
+            vel,
+            front_x,
+            color: PADDLE_COLOR,
+        }
+    }
+
     pub fn get_rect(&self) -> Rect {
         Rect {
             x: self.pos.x,
             y: self.pos.y,
-            w: self.dim.0,
-            h: self.dim.1,
+            w: self.dim.x,
+            h: self.dim.y,
         }
     }
 
@@ -49,15 +45,13 @@ impl Paddle {
     pub fn get_front_x(&self) -> f32 {
         self.front_x
     }
-}
 
-impl Update for Paddle {
-    fn update(self: &mut Paddle, dt: f32) {
+    pub fn update(&mut self, dt: f32, ctrls: (KeyCode, KeyCode)) {
         let distance = self.vel * dt;
-        if is_key_down(self.ctrl_up) {
+        if is_key_down(ctrls.1) {
             self.pos.y += distance;
         }
-        if is_key_down(self.ctrl_down) {
+        if is_key_down(ctrls.0) {
             self.pos.y -= distance
         }
 
