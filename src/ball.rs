@@ -10,17 +10,17 @@ pub struct Ball {
     color: Color,
 }
 
-pub fn init_ball(pos: Vec2, vel: Vec2, dir: Vec2) -> Ball {
-    Ball {
-        pos,
-        vel,
-        dir,
-        radius: BALL_RADIUS,
-        color: BALL_COLOR,
-    }
-}
-
 impl Ball {
+    pub fn new(pos: Vec2, vel: f32, dir: Vec2) -> Self {
+        Self {
+            pos,
+            vel: Vec2::new(vel, vel),
+            dir,
+            radius: BALL_RADIUS,
+            color: PADDLE_COLOR,
+        }
+    }
+
     pub fn get_circle(&self) -> Circle {
         Circle {
             x: self.pos.x,
