@@ -1,21 +1,18 @@
 use crate::game_traits::*;
 use crate::paddle::*;
 use crate::score::*;
-use crate::settings::*;
 use macroquad::input::KeyCode;
 use macroquad::prelude::*;
 
 pub struct Player {
-    name: String,
     paddle: Paddle,
     score: Score,
     ctrls: (KeyCode, KeyCode),
 }
 
 impl Player {
-    pub fn new(name: &str, paddle: Paddle, score: Score, ctrls: (KeyCode, KeyCode)) -> Self {
+    pub fn new(paddle: Paddle, score: Score, ctrls: (KeyCode, KeyCode)) -> Self {
         Self {
-            name: String::from(name),
             paddle,
             score,
             ctrls,
@@ -24,6 +21,10 @@ impl Player {
 
     pub fn get_paddle(&self) -> &Paddle {
         &self.paddle
+    }
+
+    pub fn score(&mut self) {
+        self.score.scored();
     }
 }
 

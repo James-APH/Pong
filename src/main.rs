@@ -50,24 +50,48 @@ async fn main() {
 
     let mut ball = Ball::new(ball_pos, MIN_BALL_VEL, ball_dir, BALL_RADIUS, BALL_COLOR);
 
-    let mut l_player = Player::new("LEFT", l_paddle, l_score, (KeyCode::W, KeyCode::S));
-    let mut r_player = Player::new("RIGHT", r_paddle, r_score, (KeyCode::Up, KeyCode::Down));
+    let mut l_player = Player::new(l_paddle, l_score, (KeyCode::W, KeyCode::S));
+    let mut r_player = Player::new(r_paddle, r_score, (KeyCode::Up, KeyCode::Down));
 
-    // main game loop
+    // GAME RELATED BOOLS (Soon to be states via enum)
     let play_game: bool = true;
+    let mut ball_spawn: bool = true;
 
     loop {
         let delta_time = get_frame_time();
 
         clear_background(GRAY);
         if play_game {
-            ball.update(delta_time);
-            l_player.update(delta_time);
-            r_player.update(delta_time);
+            if ball_spawn {
+                // set timer w/ text for 3 secs with ball paused
+                // then set ball off in a random direction
 
-            bounce_ball_at_wall(&mut ball, screen_height());
-            bounce_ball_on_paddle(&mut ball, l_player.get_paddle());
-            bounce_ball_on_paddle(&mut ball, r_player.get_paddle());
+                ball_spawn = false;
+            } else {
+                ball.update(delta_time);
+                l_player.update(delta_time);
+                r_player.update(delta_time);
+
+                bounce_ball_at_wall(&mut ball, screen_height());
+                bounce_ball_on_paddle(&mut ball, l_player.get_paddle());
+                bounce_ball_on_paddle(&mut ball, r_player.get_paddle());
+
+                if ball.get_pos().x < l_player.get_paddle().get_x() {
+                    r_player.score();
+                    ball.set_pos(ball_pos);
+                    ball.set_x_vel(MIN_BALL_VEL);
+                    ball.set_y_vel(MIN_BALL_VEL);
+                    ball_spawn = true;
+                }
+
+                if ball.get_pos().x > r_player.get_paddle().get_x() + PADDLE_W {
+                    l_player.score();
+                    ball.set_pos(ball_pos);
+                    ball.set_x_vel(MIN_BALL_VEL);
+                    ball.set_y_vel(MIN_BALL_VEL);
+                    ball_spawn = true;
+                }
+            }
         }
 
         l_player.draw();

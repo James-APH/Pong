@@ -32,20 +32,24 @@ impl Ball {
         self.radius
     }
 
-    pub fn get_y(&self) -> f32 {
-        self.pos.y
+    pub fn get_pos(&self) -> Vec2 {
+        self.pos
     }
 
-    pub fn get_dir_x(&self) -> f32 {
-        self.dir.x
+    pub fn set_pos(&mut self, pos: Vec2) {
+        self.pos = pos;
+    }
+
+    pub fn set_x(&mut self, x: f32) {
+        self.pos.x = x;
     }
 
     pub fn set_y(&mut self, y: f32) {
         self.pos.y = y;
     }
 
-    pub fn set_x(&mut self, x: f32) {
-        self.pos.x = x;
+    pub fn get_dir_x(&self) -> f32 {
+        self.dir.x
     }
 
     pub fn reverse_dir_y(&mut self) {

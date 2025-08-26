@@ -33,6 +33,10 @@ impl Paddle {
         self.pos.y
     }
 
+    pub fn get_x(&self) -> f32 {
+        self.pos.x
+    }
+
     pub fn get_center_y(&self) -> f32 {
         self.pos.y + self.dim.y / 2.
     }
