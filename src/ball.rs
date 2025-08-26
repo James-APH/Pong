@@ -3,8 +3,6 @@ use crate::settings::*;
 use macroquad::prelude::*;
 use macroquad::rand::rand;
 
-const DIRECTIONS: [f32; 2] = [1., -1.];
-
 pub struct Ball {
     pos: Vec2,
     vel: Vec2,

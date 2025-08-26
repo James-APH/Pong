@@ -33,6 +33,10 @@ impl Paddle {
         self.pos.y
     }
 
+    pub fn set_y(&mut self, y: f32) {
+        self.pos.y = y;
+    }
+
     pub fn get_x(&self) -> f32 {
         self.pos.x
     }

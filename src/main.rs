@@ -17,10 +17,12 @@ use macroquad::prelude::*;
 use std::time::Duration;
 use std::time::Instant;
 
-fn restart_game(ball: &mut Ball) {
+fn restart_game(ball: &mut Ball, l_player: &mut Player, r_player: &mut Player) {
     ball.set_pos(DEFAULT_BALL_POS);
     ball.set_x_vel(MIN_BALL_VEL);
     ball.set_y_vel(MIN_BALL_VEL);
+    l_player.get_mut_paddle().set_y(PADDLE_CENTER);
+    r_player.get_mut_paddle().set_y(PADDLE_CENTER);
 }
 
 fn draw_ball_move_count_down(count: i32) {
@@ -91,14 +93,14 @@ async fn main() {
 
                 if ball.get_pos().x < l_player.get_paddle().get_x() {
                     r_player.score();
-                    restart_game(&mut ball);
+                    restart_game(&mut ball, &mut l_player, &mut r_player);
                     ball_spawn = true;
                     count_down_time = Instant::now();
                 }
 
                 if ball.get_pos().x > r_player.get_paddle().get_x() + PADDLE_W {
                     l_player.score();
-                    restart_game(&mut ball);
+                    restart_game(&mut ball, &mut l_player, &mut r_player);
                     ball_spawn = true;
                     count_down_time = Instant::now();
                 }

@@ -23,6 +23,10 @@ impl Player {
         &self.paddle
     }
 
+    pub fn get_mut_paddle(&mut self) -> &mut Paddle {
+        &mut self.paddle
+    }
+
     pub fn score(&mut self) {
         self.score.scored();
     }
