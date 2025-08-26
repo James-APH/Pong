@@ -36,8 +36,4 @@ impl Score {
     pub fn scored(&mut self) {
         self.score += 1;
     }
-
-    pub fn reset(&mut self) {
-        self.score = 0;
-    }
 }

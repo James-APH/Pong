@@ -11,7 +11,6 @@ pub const PADDLE_X_OFFSET: f32 = 16.;
 pub const BALL_COLOR: Color = ORANGE;
 pub const BALL_RADIUS: f32 = 16.;
 pub const MIN_BALL_VEL: f32 = 75.;
-pub const MAX_BALL_VEL: f32 = 500.;
 pub const BALL_COUNT_DOWN_TIME: i32 = 3;
 
 // GAME RELATED CONSTANTS
