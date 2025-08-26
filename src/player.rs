@@ -1,5 +1,6 @@
 use crate::game_traits::*;
 use crate::paddle::*;
+use crate::score::*;
 use crate::settings::*;
 use macroquad::input::KeyCode;
 use macroquad::prelude::*;
@@ -7,16 +8,16 @@ use macroquad::prelude::*;
 pub struct Player {
     name: String,
     paddle: Paddle,
-    score: i32,
+    score: Score,
     ctrls: (KeyCode, KeyCode),
 }
 
 impl Player {
-    pub fn new(name: &str, paddle: Paddle, ctrls: (KeyCode, KeyCode)) -> Self {
+    pub fn new(name: &str, paddle: Paddle, score: Score, ctrls: (KeyCode, KeyCode)) -> Self {
         Self {
             name: String::from(name),
             paddle,
-            score: 0,
+            score,
             ctrls,
         }
     }
@@ -35,14 +36,6 @@ impl Update for Player {
 impl Draw for Player {
     fn draw(&self) {
         self.paddle.draw();
-    }
-}
-
-fn init_player(name: &str, paddle: Paddle, ctrls: (KeyCode, KeyCode)) -> Player {
-    Player {
-        name: String::from(name),
-        paddle,
-        score: 0,
-        ctrls,
+        self.score.draw();
     }
 }
