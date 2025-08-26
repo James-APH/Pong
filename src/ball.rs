@@ -1,5 +1,9 @@
 use crate::game_traits::*;
+use crate::settings::*;
 use macroquad::prelude::*;
+use macroquad::rand::rand;
+
+const DIRECTIONS: [f32; 2] = [1., -1.];
 
 pub struct Ball {
     pos: Vec2,
@@ -10,11 +14,11 @@ pub struct Ball {
 }
 
 impl Ball {
-    pub fn new(pos: Vec2, vel: f32, dir: Vec2, radius: f32, color: Color) -> Self {
+    pub fn new(pos: Vec2, vel: f32, radius: f32, color: Color) -> Self {
         Self {
             pos,
             vel: Vec2::new(vel, vel),
-            dir,
+            dir: Vec2::new(0., 0.),
             radius,
             color,
         }
@@ -50,6 +54,11 @@ impl Ball {
 
     pub fn get_dir_x(&self) -> f32 {
         self.dir.x
+    }
+
+    pub fn set_dir(&mut self) {
+        self.dir.x = BALL_DIR_OPS[(rand() % 2) as usize];
+        self.dir.y = BALL_DIR_OPS[(rand() % 2) as usize];
     }
 
     pub fn reverse_dir_y(&mut self) {

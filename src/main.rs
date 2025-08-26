@@ -14,48 +14,55 @@ use crate::player::*;
 use crate::score::Score;
 use crate::settings::*;
 use macroquad::prelude::*;
+use std::time::Duration;
+use std::time::Instant;
+
+fn restart_game(ball: &mut Ball) {
+    ball.set_pos(DEFAULT_BALL_POS);
+    ball.set_x_vel(MIN_BALL_VEL);
+    ball.set_y_vel(MIN_BALL_VEL);
+}
+
+fn draw_ball_move_count_down(count: i32) {
+    draw_text_ex(
+        count.to_string().as_str(),
+        CENTER_X - (TEXT_SIZE as f32 / 2.),
+        CENTER_Y,
+        TextParams {
+            font_size: TEXT_SIZE,
+            color: PADDLE_COLOR,
+            ..Default::default()
+        },
+    );
+}
 
 #[macroquad::main(set_conf)]
 async fn main() {
-    let score_dim = 50;
-    let screen_h = SCREEN_H as f32;
-    let screen_w = SCREEN_W as f32;
-    let center_y = screen_h / 2.0;
-    let center_x = screen_w / 2.0;
-    let paddle_center = center_y - PADDLE_H / 2.0;
-    let paddle_dim = Vec2::new(PADDLE_W, PADDLE_H);
-    let paddle_pos_l = Vec2::new(PADDLE_X_OFFSET, paddle_center);
-    let paddle_pos_r = Vec2::new(screen_w - PADDLE_W - PADDLE_X_OFFSET, paddle_center);
-    let score_pos_l = Vec2::new(score_dim as f32 * 2., score_dim as f32 * 2.);
-    let score_pos_r = Vec2::new(screen_w - score_dim as f32 * 2., score_dim as f32 * 2.);
-    let ball_pos = Vec2::new(center_x, center_y);
-    let ball_dir = Vec2::new(1.0, 1.0);
-
     let l_paddle = Paddle::new(
-        paddle_dim,
-        paddle_pos_l,
+        PADDLE_DIM,
+        PADDLE_POS_L,
         PADDLE_VEL,
-        paddle_pos_l.x + PADDLE_W,
+        PADDLE_POS_L.x + PADDLE_W,
         PADDLE_COLOR,
     );
     let r_paddle = Paddle::new(
-        paddle_dim,
-        paddle_pos_r,
+        PADDLE_DIM,
+        PADDLE_POS_R,
         PADDLE_VEL,
-        paddle_pos_r.x,
+        PADDLE_POS_R.x,
         PADDLE_COLOR,
     );
-    let l_score = Score::new(score_dim, score_pos_l, PADDLE_COLOR);
-    let r_score = Score::new(score_dim, score_pos_r, PADDLE_COLOR);
-
-    let mut ball = Ball::new(ball_pos, MIN_BALL_VEL, ball_dir, BALL_RADIUS, BALL_COLOR);
-
+    let l_score = Score::new(TEXT_SIZE, SCORE_POS_L, PADDLE_COLOR);
+    let r_score = Score::new(TEXT_SIZE, SCORE_POS_R, PADDLE_COLOR);
     let mut l_player = Player::new(l_paddle, l_score, (KeyCode::W, KeyCode::S));
     let mut r_player = Player::new(r_paddle, r_score, (KeyCode::Up, KeyCode::Down));
+    let mut ball = Ball::new(DEFAULT_BALL_POS, MIN_BALL_VEL, BALL_RADIUS, BALL_COLOR);
 
     // GAME RELATED BOOLS (Soon to be states via enum)
     let play_game: bool = true;
     let mut ball_spawn: bool = true;
+    let mut count_down_time = Instant::now();
+    let mut ball_move_count_down: i32 = BALL_COUNT_DOWN_TIME;
 
     loop {
         let delta_time = get_frame_time();
@@ -63,10 +70,16 @@ async fn main() {
         clear_background(GRAY);
         if play_game {
             if ball_spawn {
-                // set timer w/ text for 3 secs with ball paused
-                // then set ball off in a random direction
-
-                ball_spawn = false;
+                draw_ball_move_count_down(ball_move_count_down);
+                if Instant::now() - count_down_time >= Duration::from_secs(1) {
+                    ball_move_count_down -= 1;
+                    count_down_time = Instant::now();
+                    if ball_move_count_down < 0 {
+                        ball.set_dir();
+                        ball_move_count_down = BALL_COUNT_DOWN_TIME;
+                        ball_spawn = false;
+                    }
+                }
             } else {
                 ball.update(delta_time);
                 l_player.update(delta_time);
@@ -78,25 +91,24 @@ async fn main() {
 
                 if ball.get_pos().x < l_player.get_paddle().get_x() {
                     r_player.score();
-                    ball.set_pos(ball_pos);
-                    ball.set_x_vel(MIN_BALL_VEL);
-                    ball.set_y_vel(MIN_BALL_VEL);
+                    restart_game(&mut ball);
                     ball_spawn = true;
+                    count_down_time = Instant::now();
                 }
 
                 if ball.get_pos().x > r_player.get_paddle().get_x() + PADDLE_W {
                     l_player.score();
-                    ball.set_pos(ball_pos);
-                    ball.set_x_vel(MIN_BALL_VEL);
-                    ball.set_y_vel(MIN_BALL_VEL);
+                    restart_game(&mut ball);
                     ball_spawn = true;
+                    count_down_time = Instant::now();
                 }
+
+                l_player.draw();
+                r_player.draw();
+                ball.draw();
             }
         }
 
-        l_player.draw();
-        r_player.draw();
-        ball.draw();
         next_frame().await
     }
 }
