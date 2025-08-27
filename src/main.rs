@@ -19,14 +19,12 @@ use macroquad::prelude::*;
 use std::time::Duration;
 use std::time::Instant;
 
-fn restart_game(ball: &mut Ball, l_player: &mut Player, r_player: &mut Player) {
+fn restart_game_positions(ball: &mut Ball, l_player: &mut Player, r_player: &mut Player) {
     ball.set_pos(DEFAULT_BALL_POS);
     ball.set_x_vel(MIN_BALL_VEL);
     ball.set_y_vel(MIN_BALL_VEL);
     l_player.get_mut_paddle().set_y(PADDLE_CENTER);
     r_player.get_mut_paddle().set_y(PADDLE_CENTER);
-    l_player.reset_score();
-    r_player.reset_score();
 }
 
 fn draw_ball_move_count_down(count: i32) {
@@ -95,7 +93,7 @@ async fn main() {
 
     let mut count_down_time = Instant::now();
     let mut ball_move_count_down: i32 = BALL_COUNT_DOWN_TIME;
-
+    let mut winner = false;
     loop {
         let delta_time = get_frame_time();
 
@@ -140,6 +138,7 @@ async fn main() {
                     r_player.score();
                     if r_player.get_score() == 3 {
                         game_state = GameState::Winner;
+                        winner = true;
                     } else {
                         game_state = GameState::Restart;
                     }
@@ -148,6 +147,7 @@ async fn main() {
                     l_player.score();
                     if l_player.get_score() == 3 {
                         game_state = GameState::Winner;
+                        winner = true;
                     } else {
                         game_state = GameState::Restart;
                     }
@@ -187,7 +187,14 @@ async fn main() {
             }
             GameState::Restart => {
                 game_state = GameState::BallSpawn;
-                restart_game(&mut ball, &mut l_player, &mut r_player);
+                restart_game_positions(&mut ball, &mut l_player, &mut r_player);
+
+                if winner {
+                    l_player.reset_score();
+                    r_player.reset_score();
+                    winner = false;
+                }
+
                 count_down_time = Instant::now();
             }
         }
