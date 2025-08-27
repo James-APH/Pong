@@ -5,14 +5,16 @@ use macroquad::input::KeyCode;
 use macroquad::prelude::*;
 
 pub struct Player {
+    name: String,
     paddle: Paddle,
     score: Score,
     ctrls: (KeyCode, KeyCode),
 }
 
 impl Player {
-    pub fn new(paddle: Paddle, score: Score, ctrls: (KeyCode, KeyCode)) -> Self {
+    pub fn new(name: &str, paddle: Paddle, score: Score, ctrls: (KeyCode, KeyCode)) -> Self {
         Self {
+            name: String::from(name),
             paddle,
             score,
             ctrls,
@@ -29,6 +31,14 @@ impl Player {
 
     pub fn score(&mut self) {
         self.score.scored();
+    }
+
+    pub fn get_score(&self) -> i8 {
+        self.score.get_current_score()
+    }
+
+    pub fn get_name(&self) -> &str {
+        self.name.as_str()
     }
 }
 

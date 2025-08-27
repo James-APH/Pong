@@ -36,4 +36,8 @@ impl Score {
     pub fn scored(&mut self) {
         self.score += 1;
     }
+
+    pub fn get_current_score(&self) -> i8 {
+        self.score
+    }
 }
