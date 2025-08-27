@@ -40,4 +40,8 @@ impl Score {
     pub fn get_current_score(&self) -> i8 {
         self.score
     }
+
+    pub fn reset(&mut self) {
+        self.score = 0;
+    }
 }

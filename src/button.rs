@@ -1,21 +1,19 @@
-use crate::game_traits::*;
+use crate::{game_traits::*, settings::TEXT_SIZE};
 use macroquad::prelude::*;
 
-pub struct Button {
+pub struct SimpleButton {
     text: String,
     dim: Vec2,
     pos: Vec2,
-    pressed: bool,
     color: Color,
 }
 
-impl Button {
+impl SimpleButton {
     pub fn new(text: &str, dim: Vec2, pos: Vec2, color: Color) -> Self {
         Self {
             text: text.to_string(),
             dim,
             pos,
-            pressed: false,
             color,
         }
     }
@@ -34,12 +32,15 @@ impl Button {
     }
 }
 
-impl Update for Button {
-    fn update(&mut self, dt: f32) {}
-}
-
-impl Draw for Button {
+impl Draw for SimpleButton {
     fn draw(&self) {
         draw_rectangle(self.pos.x, self.pos.y, self.dim.x, self.dim.y, self.color);
+        draw_text(
+            self.text.as_str(),
+            (self.pos.x + (self.dim.x / 2.)) - ((self.text.len() as f32 / 4.) * TEXT_SIZE as f32),
+            (self.pos.y + (self.dim.y)) - (TEXT_SIZE as f32 / 4.),
+            TEXT_SIZE as f32,
+            BLACK,
+        );
     }
 }

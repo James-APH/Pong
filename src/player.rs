@@ -40,6 +40,10 @@ impl Player {
     pub fn get_name(&self) -> &str {
         self.name.as_str()
     }
+
+    pub fn reset_score(&mut self) {
+        self.score.reset();
+    }
 }
 
 impl Update for Player {

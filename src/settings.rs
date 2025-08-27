@@ -33,6 +33,10 @@ pub const SCORE_POS_R: Vec2 = Vec2::new(SCREEN_W - TEXT_SIZE as f32 * 2., TEXT_S
 pub const DEFAULT_BALL_POS: Vec2 = Vec2::new(CENTER_X, CENTER_Y);
 pub const BALL_DIR_OPS: [f32; 2] = [-1., 1.];
 
+// BUTTON RELATED CONSTANTS
+pub const BUTTON_DIM: Vec2 = Vec2::new(200., 50.);
+pub const BUTTON_Y: f32 = 300.;
+
 pub fn set_conf() -> Conf {
     Conf {
         window_title: String::from("PONG ULTIMATE BALL OUT"),
