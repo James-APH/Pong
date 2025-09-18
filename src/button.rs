@@ -1,4 +1,4 @@
-use crate::{game_traits::*, settings::TEXT_SIZE};
+use crate::{game_traits::*, settings::ui::TEXT_SIZE};
 use macroquad::prelude::*;
 
 pub struct SimpleButton {

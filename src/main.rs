@@ -14,27 +14,28 @@ use crate::game_traits::*;
 use crate::paddle::*;
 use crate::player::*;
 use crate::score::Score;
+use crate::settings::screen::*;
 use crate::settings::*;
 use macroquad::prelude::*;
 use std::time::Duration;
 use std::time::Instant;
 
 fn restart_game_positions(ball: &mut Ball, l_player: &mut Player, r_player: &mut Player) {
-    ball.set_pos(DEFAULT_BALL_POS);
-    ball.set_x_vel(MIN_BALL_VEL);
-    ball.set_y_vel(MIN_BALL_VEL);
-    l_player.get_mut_paddle().set_y(PADDLE_CENTER);
-    r_player.get_mut_paddle().set_y(PADDLE_CENTER);
+    ball.set_pos(settings::ball::DEFAULT_POSITION);
+    ball.set_x_vel(settings::ball::MINIMUM_VELOCITY);
+    ball.set_y_vel(settings::ball::MINIMUM_VELOCITY);
+    l_player.get_mut_paddle().set_y(settings::paddle::Y_CENTER);
+    r_player.get_mut_paddle().set_y(settings::paddle::Y_CENTER);
 }
 
 fn draw_ball_move_count_down(count: i32) {
     draw_text_ex(
         count.to_string().as_str(),
-        CENTER_X - (TEXT_SIZE as f32 / 2.),
-        CENTER_Y,
+        settings::screen::CENTER_X - (settings::ui::TEXT_SIZE as f32 / 2.),
+        settings::screen::CENTER_Y,
         TextParams {
-            font_size: TEXT_SIZE,
-            color: PADDLE_COLOR,
+            font_size: settings::ui::TEXT_SIZE,
+            color: settings::paddle::COLOR,
             ..Default::default()
         },
     );
@@ -51,24 +52,37 @@ enum GameState {
 #[macroquad::main(set_conf)]
 async fn main() {
     let l_paddle = Paddle::new(
-        PADDLE_DIM,
-        PADDLE_POS_L,
-        PADDLE_VEL,
-        PADDLE_POS_L.x + PADDLE_W,
-        PADDLE_COLOR,
+        settings::paddle::DIMENSIONS,
+        settings::paddle::POSITION_LEFT,
+        settings::paddle::VELOCITY,
+        settings::paddle::POSITION_LEFT.x + settings::paddle::WIDTH,
+        settings::paddle::COLOR,
     );
     let r_paddle = Paddle::new(
-        PADDLE_DIM,
-        PADDLE_POS_R,
-        PADDLE_VEL,
-        PADDLE_POS_R.x,
-        PADDLE_COLOR,
+        settings::paddle::DIMENSIONS,
+        settings::paddle::POSITION_RIGHT,
+        settings::paddle::VELOCITY,
+        settings::paddle::POSITION_RIGHT.x,
+        settings::paddle::COLOR,
     );
-    let l_score = Score::new(TEXT_SIZE, SCORE_POS_L, PADDLE_COLOR);
-    let r_score = Score::new(TEXT_SIZE, SCORE_POS_R, PADDLE_COLOR);
+    let l_score = Score::new(
+        settings::ui::TEXT_SIZE,
+        settings::score::POSITION_LEFT,
+        settings::score::COLOR,
+    );
+    let r_score = Score::new(
+        settings::ui::TEXT_SIZE,
+        settings::score::POSITION_RIGHT,
+        settings::score::COLOR,
+    );
     let mut l_player = Player::new("LEFT", l_paddle, l_score, (KeyCode::W, KeyCode::S));
     let mut r_player = Player::new("RIGHT", r_paddle, r_score, (KeyCode::Up, KeyCode::Down));
-    let mut ball = Ball::new(DEFAULT_BALL_POS, MIN_BALL_VEL, BALL_RADIUS, BALL_COLOR);
+    let mut ball = Ball::new(
+        settings::ball::DEFAULT_POSITION,
+        settings::ball::MINIMUM_VELOCITY,
+        settings::ball::RADIUS,
+        settings::ball::COLOR,
+    );
     let play_button = SimpleButton::new(
         "PLAY",
         BUTTON_DIM,
@@ -82,7 +96,7 @@ async fn main() {
         "QUIT",
         BUTTON_DIM,
         Vec2 {
-            x: SCREEN_W - 100. - BUTTON_DIM.x,
+            x: settings::screen::WIDTH - 100. - BUTTON_DIM.x,
             y: BUTTON_Y,
         },
         RED,
@@ -92,7 +106,7 @@ async fn main() {
     let mut game_state = GameState::Title;
 
     let mut count_down_time = Instant::now();
-    let mut ball_move_count_down: i32 = BALL_COUNT_DOWN_TIME;
+    let mut ball_move_count_down: i32 = settings::ball::SPAWN_TIME;
     let mut winner = false;
     loop {
         let delta_time = get_frame_time();
@@ -100,7 +114,13 @@ async fn main() {
         clear_background(GRAY);
         match game_state {
             GameState::Title => {
-                draw_text("PONG", CENTER_X - 150., CENTER_Y, 150., BLACK);
+                draw_text(
+                    "PONG",
+                    settings::screen::CENTER_X - 150.,
+                    settings::screen::CENTER_Y,
+                    150.,
+                    BLACK,
+                );
 
                 quit_button.draw();
                 play_button.draw();
@@ -120,7 +140,7 @@ async fn main() {
                     count_down_time = Instant::now();
                     if ball_move_count_down < 0 {
                         ball.set_dir();
-                        ball_move_count_down = BALL_COUNT_DOWN_TIME;
+                        ball_move_count_down = settings::ball::SPAWN_TIME;
                         game_state = GameState::GamePlay;
                     }
                 }
@@ -143,7 +163,7 @@ async fn main() {
                         game_state = GameState::Restart;
                     }
                 }
-                if ball.get_pos().x > r_player.get_paddle().get_x() + PADDLE_W {
+                if ball.get_pos().x > r_player.get_paddle().get_x() + settings::paddle::WIDTH {
                     l_player.score();
                     if l_player.get_score() == 3 {
                         game_state = GameState::Winner;

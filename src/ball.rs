@@ -1,5 +1,5 @@
 use crate::game_traits::*;
-use crate::settings::*;
+use crate::settings::ball;
 use macroquad::prelude::*;
 use macroquad::rand::rand;
 
@@ -55,8 +55,8 @@ impl Ball {
     }
 
     pub fn set_dir(&mut self) {
-        self.dir.x = BALL_DIR_OPS[(rand() % 2) as usize];
-        self.dir.y = BALL_DIR_OPS[(rand() % 2) as usize];
+        self.dir.x = ball::DIRECTION_OPS[(rand() % 2) as usize];
+        self.dir.y = ball::DIRECTION_OPS[(rand() % 2) as usize];
     }
 
     pub fn reverse_dir_y(&mut self) {
