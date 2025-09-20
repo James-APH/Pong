@@ -18,15 +18,7 @@ pub enum GameState {
     Quit,
 }
 
-fn restart_game_positions(ball: &mut Ball, l_player: &mut Player, r_player: &mut Player) {
-    ball.set_pos(ball::DEFAULT_POSITION);
-    ball.set_x_vel(ball::MINIMUM_VELOCITY);
-    ball.set_y_vel(ball::MINIMUM_VELOCITY);
-    l_player.get_mut_paddle().set_y(paddle::Y_CENTER);
-    r_player.get_mut_paddle().set_y(paddle::Y_CENTER);
-}
-
-fn draw_ball_move_countdown(count: &i32) {
+fn draw_ball_move_countdown(count: i32) {
     draw_text(
         count.to_string().as_str(),
         screen::CENTER_X - (ui::TEXT_SIZE / 2.),
@@ -49,12 +41,12 @@ pub fn title_state(play: &SimpleButton, quit: &SimpleButton) -> Option<GameState
     play.draw();
 
     if play.mouse_event_listener() {
-        Some(GameState::BallSpawn)
-    } else if quit.mouse_event_listener() {
-        Some(GameState::Quit)
-    } else {
-        None
+        return Some(GameState::BallSpawn);
     }
+    if quit.mouse_event_listener() {
+        return Some(GameState::Quit);
+    }
+    None
 }
 
 pub fn ball_spawn_state(
@@ -63,7 +55,7 @@ pub fn ball_spawn_state(
     countdown: &mut i32,
 ) -> Option<GameState> {
     {
-        draw_ball_move_countdown(&*countdown);
+        draw_ball_move_countdown(*countdown);
     }
     if timer.elapsed() >= Duration::from_secs(1) {
         *countdown -= 1;
@@ -71,13 +63,10 @@ pub fn ball_spawn_state(
         if *countdown < 0 {
             ball.set_dir();
             *countdown = ball::SPAWN_TIME;
-            Some(GameState::GamePlay)
-        } else {
-            None
+            return Some(GameState::GamePlay);
         }
-    } else {
-        None
     }
+    None
 }
 
 pub fn play_state(
@@ -102,19 +91,17 @@ pub fn play_state(
         r_player.score();
         if r_player.get_score() == 3 {
             return Some(GameState::Winner);
-        } else {
-            return Some(GameState::Restart);
         }
+        return Some(GameState::Restart);
     }
     if ball.get_pos().x > r_player.get_paddle().get_x() + paddle::WIDTH {
         l_player.score();
         if l_player.get_score() == 3 {
             return Some(GameState::Winner);
-        } else {
-            return Some(GameState::Restart);
         }
+        return Some(GameState::Restart);
     }
-    return None;
+    None
 }
 
 pub fn win_state(
@@ -149,20 +136,26 @@ pub fn win_state(
     }
     if quit.mouse_event_listener() {
         return Some(GameState::Quit);
-    } else {
-        None
     }
+    None
 }
 
-pub fn restart_state() -> Option<GameState> {
-    game_state = GameState::BallSpawn;
-    restart_game_positions(&mut ball, &mut l_player, &mut r_player);
-
-    if winner {
+pub fn restart_state(
+    ball: &mut Ball,
+    l_player: &mut Player,
+    r_player: &mut Player,
+    timer: &mut Instant,
+) -> GameState {
+    ball.set_pos(ball::DEFAULT_POSITION);
+    ball.set_x_vel(ball::MINIMUM_VELOCITY);
+    ball.set_y_vel(ball::MINIMUM_VELOCITY);
+    l_player.get_mut_paddle().set_y(paddle::Y_CENTER);
+    r_player.get_mut_paddle().set_y(paddle::Y_CENTER);
+    if l_player.get_score() >= 3 || r_player.get_score() >= 3 {
         l_player.reset_score();
         r_player.reset_score();
-        winner = false;
     }
 
-    count_down_time = Instant::now();
+    *timer = Instant::now();
+    GameState::BallSpawn
 }

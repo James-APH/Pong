@@ -10,15 +10,11 @@ mod settings;
 
 use crate::ball::Ball;
 use crate::button::SimpleButton;
-use crate::collisions::{bounce_ball_at_wall, bounce_ball_on_paddle};
-use crate::game_traits::{Draw, Update};
 use crate::paddle::Paddle;
 use crate::player::Player;
 use crate::score::Score;
-use crate::settings::screen::{CENTER_X, CENTER_Y};
-use crate::settings::{set_conf, BUTTON_DIM, BUTTON_Y};
+use crate::settings::{BUTTON_DIM, BUTTON_Y, set_conf};
 use macroquad::prelude::*;
-use std::time::Duration;
 use std::time::Instant;
 
 #[macroquad::main(set_conf)]
@@ -79,7 +75,6 @@ async fn main() {
 
     let mut timer = Instant::now();
     let mut countdown: i32 = settings::ball::SPAWN_TIME;
-    let mut winner = false;
     loop {
         let delta_time = get_frame_time();
 
@@ -99,22 +94,23 @@ async fn main() {
                 }
             }
             gamestate::GameState::GamePlay => {
-                state = match gamestate::play_state() {
-                    Some(g_state) => g_state,
-                    None => state,
-                }
+                state =
+                    match gamestate::play_state(&mut ball, &mut l_player, &mut r_player, delta_time)
+                    {
+                        Some(g_state) => g_state,
+                        None => state,
+                    }
             }
             gamestate::GameState::Winner => {
-                state = match gamestate::win_state() {
+                state = match gamestate::win_state(&l_player, &r_player, &play_button, &quit_button)
+                {
                     Some(g_state) => g_state,
                     None => state,
                 }
             }
             gamestate::GameState::Restart => {
-                state = match gamestate::restart_state() {
-                    Some(g_state) => g_state,
-                    None => state,
-                }
+                state =
+                    gamestate::restart_state(&mut ball, &mut l_player, &mut r_player, &mut timer);
             }
             gamestate::GameState::Quit => break,
         }
