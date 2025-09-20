@@ -1,6 +1,6 @@
-use crate::game_traits::*;
-use crate::paddle::*;
-use crate::score::*;
+use crate::game_traits::{Draw, Update};
+use crate::paddle::Paddle;
+use crate::score::Score;
 use macroquad::input::KeyCode;
 use macroquad::prelude::*;
 

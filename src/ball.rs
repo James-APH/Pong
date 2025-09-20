@@ -1,4 +1,4 @@
-use crate::game_traits::*;
+use crate::game_traits::{Draw, Update};
 use crate::settings::ball;
 use macroquad::prelude::*;
 use macroquad::rand::rand;
@@ -60,11 +60,11 @@ impl Ball {
     }
 
     pub fn reverse_dir_y(&mut self) {
-        self.dir.y *= -1.
+        self.dir.y *= -1.;
     }
 
     pub fn reverse_dir_x(&mut self) {
-        self.dir.x *= -1.
+        self.dir.x *= -1.;
     }
 
     pub fn set_x_vel(&mut self, vel: f32) {

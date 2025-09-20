@@ -2,52 +2,24 @@ mod ball;
 mod button;
 mod collisions;
 mod game_traits;
+mod gamestate;
 mod paddle;
 mod player;
 mod score;
 mod settings;
 
-use crate::ball::*;
+use crate::ball::Ball;
 use crate::button::SimpleButton;
-use crate::collisions::*;
-use crate::game_traits::*;
-use crate::paddle::*;
-use crate::player::*;
+use crate::collisions::{bounce_ball_at_wall, bounce_ball_on_paddle};
+use crate::game_traits::{Draw, Update};
+use crate::paddle::Paddle;
+use crate::player::Player;
 use crate::score::Score;
-use crate::settings::screen::*;
-use crate::settings::*;
+use crate::settings::screen::{CENTER_X, CENTER_Y};
+use crate::settings::{set_conf, BUTTON_DIM, BUTTON_Y};
 use macroquad::prelude::*;
 use std::time::Duration;
 use std::time::Instant;
-
-fn restart_game_positions(ball: &mut Ball, l_player: &mut Player, r_player: &mut Player) {
-    ball.set_pos(settings::ball::DEFAULT_POSITION);
-    ball.set_x_vel(settings::ball::MINIMUM_VELOCITY);
-    ball.set_y_vel(settings::ball::MINIMUM_VELOCITY);
-    l_player.get_mut_paddle().set_y(settings::paddle::Y_CENTER);
-    r_player.get_mut_paddle().set_y(settings::paddle::Y_CENTER);
-}
-
-fn draw_ball_move_count_down(count: i32) {
-    draw_text_ex(
-        count.to_string().as_str(),
-        settings::screen::CENTER_X - (settings::ui::TEXT_SIZE as f32 / 2.),
-        settings::screen::CENTER_Y,
-        TextParams {
-            font_size: settings::ui::TEXT_SIZE,
-            color: settings::paddle::COLOR,
-            ..Default::default()
-        },
-    );
-}
-
-enum GameState {
-    Title,
-    BallSpawn,
-    GamePlay,
-    Winner,
-    Restart,
-}
 
 #[macroquad::main(set_conf)]
 async fn main() {
@@ -103,121 +75,49 @@ async fn main() {
     );
 
     // GAME RELATED VARS
-    let mut game_state = GameState::Title;
+    let mut state = gamestate::GameState::Title;
 
-    let mut count_down_time = Instant::now();
-    let mut ball_move_count_down: i32 = settings::ball::SPAWN_TIME;
+    let mut timer = Instant::now();
+    let mut countdown: i32 = settings::ball::SPAWN_TIME;
     let mut winner = false;
     loop {
         let delta_time = get_frame_time();
 
         clear_background(GRAY);
-        match game_state {
-            GameState::Title => {
-                draw_text(
-                    "PONG",
-                    settings::screen::CENTER_X - 150.,
-                    settings::screen::CENTER_Y,
-                    150.,
-                    BLACK,
-                );
-
-                quit_button.draw();
-                play_button.draw();
-
-                if play_button.mouse_event_listener() {
-                    game_state = GameState::BallSpawn;
-                    count_down_time = Instant::now();
-                }
-                if quit_button.mouse_event_listener() {
-                    break;
+        match state {
+            gamestate::GameState::Title => {
+                state = match gamestate::title_state(&play_button, &quit_button) {
+                    Some(g_state) => g_state,
+                    None => state,
+                };
+                timer = Instant::now();
+            }
+            gamestate::GameState::BallSpawn => {
+                state = match gamestate::ball_spawn_state(&mut ball, &mut timer, &mut countdown) {
+                    Some(g_state) => g_state,
+                    None => state,
                 }
             }
-            GameState::BallSpawn => {
-                draw_ball_move_count_down(ball_move_count_down);
-                if Instant::now() - count_down_time >= Duration::from_secs(1) {
-                    ball_move_count_down -= 1;
-                    count_down_time = Instant::now();
-                    if ball_move_count_down < 0 {
-                        ball.set_dir();
-                        ball_move_count_down = settings::ball::SPAWN_TIME;
-                        game_state = GameState::GamePlay;
-                    }
+            gamestate::GameState::GamePlay => {
+                state = match gamestate::play_state() {
+                    Some(g_state) => g_state,
+                    None => state,
                 }
             }
-            GameState::GamePlay => {
-                ball.update(delta_time);
-                l_player.update(delta_time);
-                r_player.update(delta_time);
-
-                bounce_ball_at_wall(&mut ball, screen_height());
-                bounce_ball_on_paddle(&mut ball, l_player.get_paddle());
-                bounce_ball_on_paddle(&mut ball, r_player.get_paddle());
-
-                if ball.get_pos().x < l_player.get_paddle().get_x() {
-                    r_player.score();
-                    if r_player.get_score() == 3 {
-                        game_state = GameState::Winner;
-                        winner = true;
-                    } else {
-                        game_state = GameState::Restart;
-                    }
-                }
-                if ball.get_pos().x > r_player.get_paddle().get_x() + settings::paddle::WIDTH {
-                    l_player.score();
-                    if l_player.get_score() == 3 {
-                        game_state = GameState::Winner;
-                        winner = true;
-                    } else {
-                        game_state = GameState::Restart;
-                    }
-                }
-                l_player.draw();
-                r_player.draw();
-                ball.draw();
-            }
-            GameState::Winner => {
-                if l_player.get_score() == 3 {
-                    draw_text(
-                        format!("{} WINS!", l_player.get_name()).as_str(),
-                        CENTER_X - 250.,
-                        CENTER_Y,
-                        150.,
-                        BLACK,
-                    );
-                } else {
-                    draw_text(
-                        format!("{} WINS!", r_player.get_name()).as_str(),
-                        CENTER_X - 250.,
-                        CENTER_Y,
-                        150.,
-                        BLACK,
-                    );
-                }
-
-                play_button.draw();
-                quit_button.draw();
-
-                if play_button.mouse_event_listener() {
-                    game_state = GameState::Restart;
-                }
-                if quit_button.mouse_event_listener() {
-                    break;
+            gamestate::GameState::Winner => {
+                state = match gamestate::win_state() {
+                    Some(g_state) => g_state,
+                    None => state,
                 }
             }
-            GameState::Restart => {
-                game_state = GameState::BallSpawn;
-                restart_game_positions(&mut ball, &mut l_player, &mut r_player);
-
-                if winner {
-                    l_player.reset_score();
-                    r_player.reset_score();
-                    winner = false;
+            gamestate::GameState::Restart => {
+                state = match gamestate::restart_state() {
+                    Some(g_state) => g_state,
+                    None => state,
                 }
-
-                count_down_time = Instant::now();
             }
+            gamestate::GameState::Quit => break,
         }
-        next_frame().await
+        next_frame().await;
     }
 }

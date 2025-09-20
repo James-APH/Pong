@@ -2,7 +2,6 @@ use macroquad::prelude::*;
 
 // PADDLE RELATED CONSTANTS
 pub mod screen {
-    use super::*;
     pub const WIDTH: f32 = 1000.;
     pub const HEIGHT: f32 = 500.;
     pub const CENTER_X: f32 = WIDTH / 2.0;
@@ -10,7 +9,7 @@ pub mod screen {
 }
 
 pub mod paddle {
-    use super::*;
+    use super::{Color, Vec2, WHITE, screen};
     pub const HEIGHT: f32 = 128.;
     pub const WIDTH: f32 = 32.;
     pub const COLOR: Color = WHITE;
@@ -23,7 +22,7 @@ pub mod paddle {
 }
 
 pub mod ball {
-    use super::*;
+    use super::{Color, ORANGE, Vec2, screen};
     pub const COLOR: Color = ORANGE;
     pub const RADIUS: f32 = 16.;
     pub const MINIMUM_VELOCITY: f32 = 75.;
@@ -33,18 +32,17 @@ pub mod ball {
 }
 
 pub mod score {
-    use super::*;
-    pub const POSITION_LEFT: Vec2 = Vec2::new(ui::TEXT_SIZE as f32 * 2., ui::TEXT_SIZE as f32 * 2.);
-    pub const POSITION_RIGHT: Vec2 = Vec2::new(
-        screen::WIDTH - ui::TEXT_SIZE as f32 * 2.,
-        ui::TEXT_SIZE as f32 * 2.,
-    );
+    use super::{Color, RED, Vec2, screen, ui};
+    pub const POSITION_LEFT: Vec2 = Vec2::new(ui::TEXT_SIZE * 2., ui::TEXT_SIZE * 2.);
+    pub const POSITION_RIGHT: Vec2 =
+        Vec2::new(screen::WIDTH - ui::TEXT_SIZE * 2., ui::TEXT_SIZE * 2.);
     pub const COLOR: Color = RED;
 }
 
 pub mod ui {
-    use super::*;
-    pub const TEXT_SIZE: u16 = 50;
+    use super::{BLACK, Color};
+    pub const TEXT_SIZE: f32 = 50.;
+    pub const COLOR: Color = BLACK;
 }
 
 // BUTTON RELATED CONSTANTS

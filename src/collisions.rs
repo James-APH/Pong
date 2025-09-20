@@ -1,5 +1,5 @@
-use crate::ball::*;
-use crate::paddle::*;
+use crate::ball::Ball;
+use crate::paddle::Paddle;
 use crate::settings::paddle;
 const PADDLE_HIT_RANGE_NARROW: f32 = 0.1 * paddle::HEIGHT;
 const PADDLE_HIT_RANGE_SLIM: f32 = 0.3 * paddle::HEIGHT;
@@ -37,10 +37,6 @@ pub fn bounce_ball_at_wall(ball: &mut Ball, height: f32) {
 /// func to bounce ball off of paddles
 pub fn bounce_ball_on_paddle(ball: &mut Ball, paddle: &Paddle) {
     if ball.get_circle().overlaps_rect(&paddle.get_rect()) {
-        if ball.get_pos().y + ball.get_radius() == paddle.get_y() {
-            ball.set_x_vel(ball.get_x_vel() + VEL_INCR_SNAIL);
-            ball.set_y_vel(ball.get_y_vel() + VEL_INCR_SNAIL);
-        }
         ball_paddle_collision!(
             ball,
             paddle,

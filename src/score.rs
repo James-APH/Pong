@@ -1,47 +1,44 @@
-use crate::game_traits::*;
+use crate::game_traits::Draw;
 use macroquad::prelude::*;
 
 pub struct Score {
-    dim: u16,
+    dim: f32,
     pos: Vec2,
-    score: i8,
+    count: i8,
     color: Color,
 }
 
 impl Draw for Score {
     fn draw(&self) {
-        draw_text_ex(
-            self.score.to_string().as_str(),
+        draw_text(
+            self.count.to_string().as_str(),
             self.pos.x,
             self.pos.y,
-            TextParams {
-                font_size: self.dim,
-                color: self.color,
-                ..Default::default()
-            },
+            self.dim,
+            self.color,
         );
     }
 }
 
 impl Score {
-    pub fn new(dim: u16, pos: Vec2, color: Color) -> Self {
+    pub fn new(dim: f32, pos: Vec2, color: Color) -> Self {
         Self {
             dim,
             pos,
-            score: 0,
+            count: 0,
             color,
         }
     }
 
     pub fn scored(&mut self) {
-        self.score += 1;
+        self.count += 1;
     }
 
     pub fn get_current_score(&self) -> i8 {
-        self.score
+        self.count
     }
 
     pub fn reset(&mut self) {
-        self.score = 0;
+        self.count = 0;
     }
 }

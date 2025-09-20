@@ -1,4 +1,4 @@
-use crate::game_traits::*;
+use crate::game_traits::Draw;
 use macroquad::prelude::*;
 
 pub struct Paddle {
@@ -29,10 +29,6 @@ impl Paddle {
         }
     }
 
-    pub fn get_y(&self) -> f32 {
-        self.pos.y
-    }
-
     pub fn set_y(&mut self, y: f32) {
         self.pos.y = y;
     }
@@ -55,7 +51,7 @@ impl Paddle {
             self.pos.y += distance;
         }
         if is_key_down(ctrls.0) {
-            self.pos.y -= distance
+            self.pos.y -= distance;
         }
 
         self.pos.y = clamp(self.pos.y, 0.0, screen_height() - self.dim.y);
