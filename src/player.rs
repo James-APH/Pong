@@ -1,4 +1,3 @@
-use crate::game_traits::{Draw, Update};
 use crate::paddle::Paddle;
 use crate::score::Score;
 use macroquad::input::KeyCode;
@@ -44,16 +43,12 @@ impl Player {
     pub fn reset_score(&mut self) {
         self.score.reset();
     }
-}
 
-impl Update for Player {
-    fn update(&mut self, dt: f32) {
+    pub fn update(&mut self, dt: f32) {
         self.paddle.update(dt, self.ctrls);
     }
-}
 
-impl Draw for Player {
-    fn draw(&self) {
+    pub fn draw(&self) {
         self.paddle.draw();
         self.score.draw();
     }

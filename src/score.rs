@@ -1,4 +1,3 @@
-use crate::game_traits::Draw;
 use macroquad::prelude::*;
 
 pub struct Score {
@@ -6,18 +5,6 @@ pub struct Score {
     pos: Vec2,
     count: i8,
     color: Color,
-}
-
-impl Draw for Score {
-    fn draw(&self) {
-        draw_text(
-            self.count.to_string().as_str(),
-            self.pos.x,
-            self.pos.y,
-            self.dim,
-            self.color,
-        );
-    }
 }
 
 impl Score {
@@ -40,5 +27,15 @@ impl Score {
 
     pub fn reset(&mut self) {
         self.count = 0;
+    }
+
+    pub fn draw(&self) {
+        draw_text(
+            self.count.to_string().as_str(),
+            self.pos.x,
+            self.pos.y,
+            self.dim,
+            self.color,
+        );
     }
 }

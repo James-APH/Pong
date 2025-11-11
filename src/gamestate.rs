@@ -1,7 +1,6 @@
 use crate::ball::Ball;
 use crate::button::SimpleButton;
 use crate::collisions::{bounce_ball_at_wall, bounce_ball_on_paddle};
-use crate::game_traits::{Draw, Update};
 use crate::player::Player;
 use crate::settings::screen::{CENTER_X, CENTER_Y};
 use crate::settings::{ball, paddle, screen, ui};
@@ -61,7 +60,7 @@ pub fn ball_spawn_state(
         *countdown -= 1;
         *timer = Instant::now();
         if *countdown < 0 {
-            ball.set_dir();
+            ball.initialize_dirrection();
             *countdown = ball::SPAWN_TIME;
             return Some(GameState::GamePlay);
         }
@@ -87,14 +86,14 @@ pub fn play_state(
     r_player.draw();
     ball.draw();
 
-    if ball.get_pos().x < l_player.get_paddle().get_x() {
+    if ball.pos.x < l_player.get_paddle().pos.x {
         r_player.score();
         if r_player.get_score() == 3 {
             return Some(GameState::Winner);
         }
         return Some(GameState::Restart);
     }
-    if ball.get_pos().x > r_player.get_paddle().get_x() + paddle::WIDTH {
+    if ball.pos.x > r_player.get_paddle().pos.x + paddle::WIDTH {
         l_player.score();
         if l_player.get_score() == 3 {
             return Some(GameState::Winner);
@@ -146,11 +145,12 @@ pub fn restart_state(
     r_player: &mut Player,
     timer: &mut Instant,
 ) -> GameState {
-    ball.set_pos(ball::DEFAULT_POSITION);
-    ball.set_x_vel(ball::MINIMUM_VELOCITY);
-    ball.set_y_vel(ball::MINIMUM_VELOCITY);
-    l_player.get_mut_paddle().set_y(paddle::Y_CENTER);
-    r_player.get_mut_paddle().set_y(paddle::Y_CENTER);
+    ball.pos.x = ball::DEFAULT_POSITION.x;
+    ball.pos.y = ball::DEFAULT_POSITION.y;
+    ball.vel.x = ball::MINIMUM_VELOCITY;
+    ball.vel.y = ball::MINIMUM_VELOCITY;
+    l_player.get_mut_paddle().pos.y = paddle::Y_CENTER;
+    r_player.get_mut_paddle().pos.y = paddle::Y_CENTER;
     if l_player.get_score() >= 3 || r_player.get_score() >= 3 {
         l_player.reset_score();
         r_player.reset_score();

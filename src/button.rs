@@ -1,5 +1,4 @@
-use crate::game_traits::Draw;
-use crate::settings::ui::TEXT_SIZE;
+use crate::settings::ui::*;
 use macroquad::prelude::*;
 
 pub struct SimpleButton {
@@ -31,10 +30,8 @@ impl SimpleButton {
             false
         }
     }
-}
 
-impl Draw for SimpleButton {
-    fn draw(&self) {
+    pub fn draw(&self) {
         draw_rectangle(self.pos.x, self.pos.y, self.dim.x, self.dim.y, self.color);
         draw_text(
             self.text.as_str(),

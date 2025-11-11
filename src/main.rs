@@ -1,7 +1,6 @@
 mod ball;
 mod button;
 mod collisions;
-mod game_traits;
 mod gamestate;
 mod paddle;
 mod player;
@@ -20,19 +19,14 @@ use std::time::Instant;
 #[macroquad::main(set_conf)]
 async fn main() {
     let l_paddle = Paddle::new(
-        settings::paddle::DIMENSIONS,
         settings::paddle::POSITION_LEFT,
-        settings::paddle::VELOCITY,
         settings::paddle::POSITION_LEFT.x + settings::paddle::WIDTH,
-        settings::paddle::COLOR,
     );
     let r_paddle = Paddle::new(
-        settings::paddle::DIMENSIONS,
         settings::paddle::POSITION_RIGHT,
-        settings::paddle::VELOCITY,
         settings::paddle::POSITION_RIGHT.x,
-        settings::paddle::COLOR,
     );
+
     let l_score = Score::new(
         settings::ui::TEXT_SIZE,
         settings::score::POSITION_LEFT,
@@ -45,12 +39,7 @@ async fn main() {
     );
     let mut l_player = Player::new("LEFT", l_paddle, l_score, (KeyCode::W, KeyCode::S));
     let mut r_player = Player::new("RIGHT", r_paddle, r_score, (KeyCode::Up, KeyCode::Down));
-    let mut ball = Ball::new(
-        settings::ball::DEFAULT_POSITION,
-        settings::ball::MINIMUM_VELOCITY,
-        settings::ball::RADIUS,
-        settings::ball::COLOR,
-    );
+    let mut ball = Ball::new();
     let play_button = SimpleButton::new(
         "PLAY",
         BUTTON_DIM,

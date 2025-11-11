@@ -1,22 +1,22 @@
-use crate::game_traits::Draw;
+use crate::settings::paddle;
 use macroquad::prelude::*;
 
 pub struct Paddle {
-    dim: Vec2,
-    pos: Vec2,
-    vel: f32,
-    front_x: f32,
-    color: Color,
+    pub dim: Vec2,
+    pub pos: Vec2,
+    pub vel: f32,
+    pub front_x: f32,
+    pub color: Color,
 }
 
 impl Paddle {
-    pub fn new(dim: Vec2, pos: Vec2, vel: f32, front_x: f32, color: Color) -> Self {
+    pub fn new(pos: Vec2, front_x: f32) -> Self {
         Self {
-            dim,
+            dim: paddle::DIMENSIONS,
             pos,
-            vel,
+            vel: paddle::VELOCITY,
             front_x,
-            color,
+            color: paddle::COLOR,
         }
     }
 
@@ -27,22 +27,6 @@ impl Paddle {
             w: self.dim.x,
             h: self.dim.y,
         }
-    }
-
-    pub fn set_y(&mut self, y: f32) {
-        self.pos.y = y;
-    }
-
-    pub fn get_x(&self) -> f32 {
-        self.pos.x
-    }
-
-    pub fn get_center_y(&self) -> f32 {
-        self.pos.y + self.dim.y / 2.
-    }
-
-    pub fn get_front_x(&self) -> f32 {
-        self.front_x
     }
 
     pub fn update(&mut self, dt: f32, ctrls: (KeyCode, KeyCode)) {
@@ -56,10 +40,8 @@ impl Paddle {
 
         self.pos.y = clamp(self.pos.y, 0.0, screen_height() - self.dim.y);
     }
-}
 
-impl Draw for Paddle {
-    fn draw(self: &Paddle) {
+    pub fn draw(&self) {
         draw_rectangle(self.pos.x, self.pos.y, self.dim.x, self.dim.y, self.color);
     }
 }
